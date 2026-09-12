@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>ИМПЕРИЯ ВКУСА — Панель управления</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caacup%C3%A9+One&family=Unbounded:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<!-- ---- вход в панель (проверка в браузере, статический хостинг) ---- -->
+<div class="pm-overlay open" id="loginGate">
+  <div class="pm-card confirm-card">
+    <div class="pm-title" style="justify-content:center;">Вход в панель</div>
+    <p>Введите данные администратора, чтобы продолжить.</p>
+    <label class="pm-field">
+      <span>Логин</span>
+      <input type="text" id="loginUsername" placeholder="Логин" autocomplete="username">
+    </label>
+    <label class="pm-field">
+      <span>Пароль</span>
+      <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+    </label>
+    <p class="login-error" id="loginError" style="display:none; color:var(--flame);"></p>
+    <div class="pm-footer">
+      <button class="btn-checkout-like" id="loginSubmit" type="button">Войти</button>
+    </div>
+  </div>
+</div>
+
+<div class="admin-shell" id="adminShell" style="display:none;">
+  <div class="admin-inner" style="flex:1; display:flex; flex-direction:column;">
+
+    <header class="admin-topbar">
+      <a href="index.html" class="brand">
+        <span class="dot"></span>
+        <span>ИМПЕРИЯ ВКУСА<small>Панель управления</small></span>
+      </a>
+      <a href="index.html" class="btn btn-primary" style="padding:10px 18px; font-size:13px;">← На сайт</a>
+      <button type="button" class="btn" id="logoutBtn" style="padding:10px 18px; font-size:13px; background:transparent; border:1px solid rgba(243,232,214,.25); color:var(--cream);">Выйти</button>
+    </header>
+
+    <main class="admin-main">
+
+      <div class="admin-stats reveal in">
+        <div class="admin-stat"><b id="statTotal">0</b><span>Всего товаров</span></div>
+        <div class="admin-stat"><b id="statPizza">0</b><span>Пиццы</span></div>
+        <div class="admin-stat"><b id="statRolls">0</b><span>Роллы</span></div>
+        <div class="admin-stat"><b id="statOther">0</b><span>Бургеры и закуски</span></div>
+        <div class="admin-stat"><b id="statOrders">0</b><span>Заказы за день</span></div>
+        <div class="admin-stat"><b id="statProfit">0 ₽</b><span>Прибыль за день</span></div>
+      </div>
+
+      <div class="admin-section-tabs" id="sectionTabs">
+        <button class="tab-btn active" data-section="products">Товары</button>
+        <button class="tab-btn" data-section="orders">Заказы</button>
+      </div>
+
+      <div id="productsSection">
+        <div class="admin-toolbar">
+          <input type="text" class="admin-search" id="searchInput" placeholder="Поиск по названию…">
+          <div class="category-filters" id="categoryFilters">
+            <button class="tab-btn active" data-cat="pizza">Пиццы</button>
+            <button class="tab-btn" data-cat="rolls">Роллы</button>
+            <button class="tab-btn" data-cat="burgers">Бургеры</button>
+            <button class="tab-btn" data-cat="snacks">Закуски</button>
+          </div>
+        </div>
+
+        <div class="admin-grid" id="productGrid"></div>
+      </div>
+
+      <div id="ordersSection" style="display:none;">
+        <div class="orders-toolbar">
+          <span class="orders-count" id="ordersCount">Заказов: 0</span>
+          <button class="orders-clear" id="clearOrders" type="button">Очистить все заказы</button>
+        </div>
+        <div class="orders-subnote">Заказы с сайта приходят сюда автоматически — обновляется без перезагрузки страницы.</div>
+        <div class="orders-list" id="ordersList"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<button class="add-fab" id="addFab" style="display:none;">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+  Добавить товар
+</button>
+
+<!-- ---- product modal (add / edit) ---- -->
+<div class="pm-overlay" id="productModal">
+  <div class="pm-card">
+    <div class="pm-title">
+      <span id="pmTitle">Новый товар</span>
+      <button class="pm-close" id="pmClose" type="button">×</button>
+    </div>
+
+    <div class="pm-preview" id="pmPreview">Ссылка на фото появится здесь</div>
+
+    <label class="pm-field">
+      <span>Название</span>
+      <input type="text" id="pmName" placeholder="Например: Пепперони Классик">
+    </label>
+
+    <div class="pm-row">
+      <label class="pm-field">
+        <span>Категория</span>
+        <select id="pmCategory">
+          <option value="pizza">Пиццы</option>
+          <option value="rolls">Роллы</option>
+          <option value="burgers">Бургеры</option>
+          <option value="snacks">Закуски</option>
+        </select>
+      </label>
+      <label class="pm-field">
+        <span>Цена, ₽</span>
+        <input type="number" id="pmPrice" min="0" step="10" placeholder="590">
+      </label>
+    </div>
+
+    <div class="pm-row">
+      <label class="pm-field">
+        <span>Плашка</span>
+        <select id="pmTag">
+          <option value="">Без плашки</option>
+          <option value="Хит">Хит</option>
+          <option value="Острый">Острый</option>
+          <option value="Новинка">Новинка</option>
+        </select>
+      </label>
+      <label class="pm-field">
+        <span>Ссылка на фото</span>
+        <input type="url" id="pmImg" placeholder="https://…">
+      </label>
+    </div>
+
+    <label class="pm-field">
+      <span>Описание</span>
+      <textarea id="pmDesc" placeholder="Короткое описание состава"></textarea>
+    </label>
+
+    <div class="pm-footer">
+      <button class="btn-ghost-like" id="pmCancel" type="button">Отмена</button>
+      <button class="btn-checkout-like" id="pmSave" type="button">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- ---- delete confirm ---- -->
+<div class="pm-overlay" id="confirmModal">
+  <div class="pm-card confirm-card">
+    <div class="pm-title" style="justify-content:center;">Удалить товар?</div>
+    <p id="confirmText">Это действие нельзя отменить.</p>
+    <div class="pm-footer">
+      <button class="btn-ghost-like" id="confirmCancel" type="button">Отмена</button>
+      <button class="btn-checkout-like" id="confirmDelete" type="button" style="background:var(--flame);">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<div class="admin-toast" id="adminToast"></div>
+
+<script src="js/api-config.js"></script>
+<script src="js/menu-data.js"></script>
+<script src="js/admin-config.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

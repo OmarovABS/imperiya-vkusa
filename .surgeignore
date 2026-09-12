@@ -1,0 +1,14 @@
+*.md
+*.py
+*.txt
+*.yaml
+*.yml
+*.db
+*.db-journal
+__pycache__/
+.idea/
+.git/
+.surgeignore
+.env
+static/
+test-api.html
