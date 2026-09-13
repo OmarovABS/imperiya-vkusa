@@ -1,6 +1,6 @@
 import aiosqlite
 from typing import Optional, List, Dict, Any
-from config import DATABASE_URL, BASE_DIR
+from app.config import BASE_DIR
 import json
 
 DATABASE_PATH = BASE_DIR / "delivery.db"
@@ -10,13 +10,14 @@ async def get_db_connection() -> aiosqlite.Connection:
     """Create and return an async SQLite connection."""
     conn = await aiosqlite.connect(DATABASE_PATH)
     conn.row_factory = aiosqlite.Row
+    await conn.execute("PRAGMA encoding = 'UTF-8'")
     return conn
 
 
 async def init_db():
     """Initialize database tables."""
     conn = await get_db_connection()
-    
+
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,7 +26,7 @@ async def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
-    
+
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,7 +41,7 @@ async def init_db():
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
-    
+
     await conn.execute("""
         CREATE TABLE IF NOT EXISTS orders (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -53,7 +54,7 @@ async def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
-    
+
     await conn.commit()
     await conn.close()
 
@@ -80,7 +81,7 @@ async def get_user_by_username(username: str) -> Optional[Dict[str, Any]]:
     )
     row = await cursor.fetchone()
     await conn.close()
-    
+
     if row:
         return dict(row)
     return None
@@ -94,7 +95,7 @@ async def get_all_products() -> List[Dict[str, Any]]:
     )
     rows = await cursor.fetchall()
     await conn.close()
-    
+
     return [dict(row) for row in rows]
 
 
@@ -107,7 +108,7 @@ async def get_product_by_id(product_id: int) -> Optional[Dict[str, Any]]:
     )
     row = await cursor.fetchone()
     await conn.close()
-    
+
     if row:
         return dict(row)
     return None
@@ -125,7 +126,7 @@ async def create_product(
     """Create a new product and return the ID."""
     conn = await get_db_connection()
     cursor = await conn.execute(
-        """INSERT INTO products 
+        """INSERT INTO products
            (name, description, price, weight, category, image_url, is_available)
            VALUES (?, ?, ?, ?, ?, ?, ?)""",
         (name, description, price, weight, category, image_url, is_available)
@@ -148,10 +149,10 @@ async def update_product(
 ) -> bool:
     """Update product fields."""
     conn = await get_db_connection()
-    
+
     updates = []
     params = []
-    
+
     if name is not None:
         updates.append("name = ?")
         params.append(name)
@@ -173,17 +174,17 @@ async def update_product(
     if is_available is not None:
         updates.append("is_available = ?")
         params.append(is_available)
-    
+
     if updates:
         updates.append("updated_at = CURRENT_TIMESTAMP")
         params.append(product_id)
-        
+
         query = f"UPDATE products SET {', '.join(updates)} WHERE id = ?"
         await conn.execute(query, params)
         await conn.commit()
         await conn.close()
         return True
-    
+
     await conn.close()
     return False
 
@@ -211,7 +212,7 @@ async def create_order(
     """Create a new order and return the ID."""
     conn = await get_db_connection()
     cursor = await conn.execute(
-        """INSERT INTO orders 
+        """INSERT INTO orders
            (customer_name, phone, address, total_price, items)
            VALUES (?, ?, ?, ?, ?)""",
         (customer_name, phone, address, total_price, json.dumps(items))
@@ -230,13 +231,13 @@ async def get_all_orders() -> List[Dict[str, Any]]:
     )
     rows = await cursor.fetchall()
     await conn.close()
-    
+
     orders = []
     for row in rows:
         order = dict(row)
         order['items'] = json.loads(order['items'])
         orders.append(order)
-    
+
     return orders
 
 
@@ -249,10 +250,10 @@ async def get_order_by_id(order_id: int) -> Optional[Dict[str, Any]]:
     )
     row = await cursor.fetchone()
     await conn.close()
-    
+
     if not row:
         return None
-    
+
     order = dict(row)
     order['items'] = json.loads(order['items'])
     return order

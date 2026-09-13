@@ -120,7 +120,7 @@ async function loadProducts(){
       name: d.name,
       desc: d.description,
       price: d.price,
-      img: resolveImageUrl(d.image_url) || '/img/dishes/placeholder.jpg',
+      img: resolveImageUrl(d.image_url) || 'img/dishes/placeholder.jpg',
       rawImg: d.image_url || '',
       alt: d.name,
       tag: '', // Бэкенд пока не поддерживает теги

@@ -3,7 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ИМПЕРИЯ ВКУСА — пицца и роллы с доставкой</title>
+<title>ИМПЕРИЯ ВКУСА</title>
+<meta name="description" content="Империя Вкуса в Кизляре — пицца, бургеры и роллы с доставкой до 03:00. Ул. Победы 91/1.">
+<meta name="theme-color" content="#E8462A">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Империя Вкуса">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="196x196" href="img/icons/icon-196.png">
+<link rel="apple-touch-icon" href="img/icons/icon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Caacup%C3%A9+One&family=Unbounded:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -13,7 +22,7 @@
 
 <nav class="nav" id="nav">
   <div class="wrap">
-    <a href="#top" class="brand"><span class="dot"></span>ИМПЕРИЯ ВКУСА</a>
+    <a href="#top" class="brand"><img class="brand-logo" src="img/logo.png" alt="Империя Вкуса">ИМПЕРИЯ ВКУСА</a>
     <div class="nav-links">
       <a href="#menu">Меню</a>
       <a href="#process">Как это работает</a>
@@ -261,7 +270,7 @@
   <div class="wrap">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="#top" class="brand"><img class="brand-logo" src="img/logo.png" alt="Империя Вкуса">ИМПЕРИЯ ВКУСА</a>
+<a href="#top" class="brand"><img class="brand-logo" src="img/logo.png" alt="Империя Вкуса">ИМПЕРИЯ ВКУСА</a>
         <p>«Империя Вкуса» в Кизляре — понятная, сытная и строго Халяльная еда для тех, кто ценит качество.</p>
       </div>
 
@@ -297,6 +306,11 @@
 
     <div class="footer-bottom" style="flex-direction:column; gap:6px;">
       <span>© 2026 ИМПЕРИЯ ВКУСА. Все права защищены.</span>
+      <span style="font-size:12px; color:var(--cream-dim);">ИП [ФИО] | ИНН [номер] | ОГРНИП [номер]</span>
+      <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+        <a href="privacy.html" style="opacity:.5; font-size:12px;">Политика конфиденциальности</a>
+        <a href="terms.html" style="opacity:.5; font-size:12px;">Пользовательское соглашение</a>
+      </div>
       <a href="admin.html" style="opacity:.35; font-size:12px;">Панель управления</a>
     </div>
   </div>
@@ -343,6 +357,10 @@
     <label class="checkout-field"><span>Имя</span><input type="text" id="checkoutName" placeholder="Ваше имя"></label>
     <label class="checkout-field"><span>Телефон</span><input type="tel" id="checkoutPhone" placeholder="+7 ___ ___-__-__"></label>
     <label class="checkout-field" id="checkoutAddressField"><span>Адрес доставки</span><input type="text" id="checkoutAddress" placeholder="Улица, дом, квартира"></label>
+    <label class="checkout-consent">
+      <input type="checkbox" id="checkoutConsent" required>
+      <span>Я согласен на обработку персональных данных в соответствии с <a href="privacy.html" target="_blank">Политикой конфиденциальности</a></span>
+    </label>
     <button class="cart-checkout" id="checkoutConfirm">Подтвердить заказ</button>
     <button class="checkout-cancel" id="checkoutCancel">Отмена</button>
   </div>

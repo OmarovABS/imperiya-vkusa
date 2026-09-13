@@ -9,7 +9,7 @@ const TAG_CLASS_MAP = { 'Хит': 'tag-hit', 'Острый': 'tag-hot', 'Нов�
 window.API_BASE_URL = window.API_BASE_URL || '';
 
 // Приводит путь к изображению к абсолютному URL:
-// - относительные пути бэкенда (/static/...) склейка с API_BASE_URL
+// - пути бэкенда (/static/...) склеиваются с API_BASE_URL
 // - абсолютные http(s) возвращаются как есть
 // - локальные пути (img/...) возвращаются как есть
 function resolveImageUrl(url) {
@@ -43,7 +43,7 @@ async function fetchMenuData() {
         name: d.name,
         desc: d.description,
         price: d.price,
-        img: resolveImageUrl(d.image_url) || '/img/dishes/placeholder.jpg',
+        img: resolveImageUrl(d.image_url) || 'img/dishes/placeholder.jpg',
         alt: d.name,
         tag: '', // Бэкенд пока не поддерживает теги
         tagClass: '',

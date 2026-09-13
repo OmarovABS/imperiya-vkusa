@@ -511,8 +511,11 @@ checkoutConfirm.addEventListener('click', async () => {
   const name = checkoutName.value.trim();
   const phone = checkoutPhone.value.trim();
   const address = checkoutAddress.value.trim();
+  const consent = document.getElementById('checkoutConsent').checked;
+  
   if (!name || !phone) { alert('Заполните имя и телефон'); return; }
   if (deliveryType === 'delivery' && address.length < 5) { alert('Укажите адрес доставки'); return; }
+  if (!consent) { alert('Необходимо согласие на обработку персональных данных'); return; }
 
   const items = Array.from(cart.values()).map(i => ({
     id: i.id,

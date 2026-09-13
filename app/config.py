@@ -3,7 +3,7 @@ import secrets
 from pathlib import Path
 
 # Base paths
-BASE_DIR = Path(__file__).parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR = BASE_DIR / "static"
 UPLOADS_DIR = STATIC_DIR / "uploads"
 
@@ -38,14 +38,12 @@ TELEGRAM_BOT_TOKEN = ""
 TELEGRAM_CHAT_ID = ""
 
 # CORS
-# NOTE: mixing "*" with allow_credentials=True (see main.py) is invalid per
-# the CORS spec — browsers reject a wildcard origin on credentialed requests.
-# Since the frontend is now served by this same app (see main.py), same-origin
-# requests need no CORS entry at all; these are only for running the frontend
-# from a separate dev server/port during development.
+# The frontend is served by this same app (same origin), so requests need no
+# CORS entry at all; these are only for running the frontend from a separate
+# dev server/port during development.
 #
-# In production (frontend on Surge, API on Render) pass the site domain via the
-# CORS_ORIGINS env var — a comma-separated list appended to the dev entries.
+# In production pass the real site domain(s) via the CORS_ORIGINS env var —
+# a comma-separated list appended to the local dev entries below.
 EXTRA_CORS_ORIGINS = [
     o.strip()
     for o in os.environ.get("CORS_ORIGINS", "").split(",")
@@ -60,7 +58,6 @@ CORS_ORIGINS = [
     "http://127.0.0.1:5500",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "https://imperiya-vkusa.surge.sh",
 ] + EXTRA_CORS_ORIGINS
 
 # Cache settings
