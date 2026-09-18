@@ -42,4 +42,4 @@ async def web_manifest():
 @router.get("/api")
 async def api_root():
     """API info endpoint."""
-    return {"message": "Imperiya Vkusa API", "version": "1.0.0"}
+    return {"message": "FoodDrop API", "version": "1.0.0"}

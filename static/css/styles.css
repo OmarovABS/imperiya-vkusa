@@ -102,6 +102,8 @@ body::before{
 .brand{ font-family:'Unbounded',sans-serif; font-weight:800; font-size:22px; letter-spacing:0.02em; display:flex; align-items:center; gap:9px; }
 .brand .dot{ width:9px; height:9px; border-radius:50%; background:var(--flame); box-shadow:0 0 14px 3px var(--flame-soft); }
 .brand-logo{ width:34px; height:34px; border-radius:50%; object-fit:cover; flex:none; box-shadow:0 4px 14px -4px rgba(232,70,42,0.55); }
+.brand-f{ color:var(--cream); -webkit-text-fill-color:var(--cream); }
+.brand-d{ color:var(--gold); -webkit-text-fill-color:var(--gold); }
 .nav-links{ display:flex; align-items:center; gap:34px; font-size:14.5px; font-weight:600; color:var(--cream-dim); }
 .nav-right{ display:flex; align-items:center; gap:18px; }
 .nav-phone{ font-family:'Caacupé One',monospace; font-size:14px; color:var(--cream-dim); display:block; }
@@ -253,7 +255,7 @@ body::before{
   display:grid;
   grid-template-columns:1fr 1fr;
   grid-template-rows:1fr 1fr;
-  gap:clamp(6px,1.2vw,14px);
+  gap:clamp(10px,2vw,24px);
   align-items:center; justify-items:center;
   padding:clamp(6px,1.5vw,16px);
   opacity:0; visibility:hidden;
@@ -267,7 +269,7 @@ body::before{
   border:1px solid var(--line);
   box-shadow:0 30px 70px -20px rgba(0,0,0,0.65);
   text-decoration:none;
-  width:clamp(240px,30vw,360px);
+  width:min(clamp(170px, 22vw, 300px), clamp(150px, 36vh, 300px));
   aspect-ratio:4/3;
 }
 .fly-card::after{
@@ -358,10 +360,11 @@ body::before{
 }
 /* fly out to the four corners */
 .fly-grid.show .fly-card{ opacity:1; }
-.fly-grid.show .fly-pizza{   transform:translate(-4vw, -2.5vh) rotate(-4deg) scale(1); }
-.fly-grid.show .fly-rolls{   transform:translate(4vw, -2.5vh) rotate(4deg) scale(1); }
-.fly-grid.show .fly-burgers{ transform:translate(-4vw, 2.5vh) rotate(4deg) scale(1); }
-.fly-grid.show .fly-snacks{  transform:translate(4vw, 2.5vh) rotate(-4deg) scale(1); }
+/* fly out to the four corners (offsets scale with the cards, keep them inside the stage) */
+.fly-grid.show .fly-pizza{   transform:translate(-6%, -4%) rotate(0deg) scale(1); }
+.fly-grid.show .fly-rolls{   transform:translate(6%, -4%) rotate(0deg) scale(1); }
+.fly-grid.show .fly-burgers{ transform:translate(-6%, 4%) rotate(0deg) scale(1); }
+.fly-grid.show .fly-snacks{  transform:translate(6%, 4%) rotate(0deg) scale(1); }
 
 /* ---------- menu ---------- */
 .menu{ padding:90px 0 85px; }

@@ -1,97 +1,128 @@
-# Imperiya Vkusa - FastAPI Backend
+# FoodDrop - Food Delivery Platform
 
-Асинхронный бэкенд на Python (FastAPI) с базой данных SQLite для сайта доставки пиццы и роллов.
+A modern full-stack food delivery application built with FastAPI, featuring a responsive frontend and admin panel.
 
-## Технологии
+## 🚀 Features
 
-- **FastAPI** - современный веб-фреймворк
-- **aiosqlite** - асинхронный драйвер SQLite
-- **Pydantic** - валидация данных
-- **Pillow** - обработка изображений
-- **JWT (OAuth2)** - авторизация
-- **httpx** - асинхронный HTTP-клиент
+- **Product Catalog**: Browse and filter food items by category
+- **Order Management**: Create and track orders with real-time status updates
+- **Admin Panel**: Full CRUD operations for products and order management
+- **Image Processing**: Automatic WebP conversion and optimization
+- **JWT Authentication**: Secure admin access with OAuth2
+- **Caching**: In-memory caching for improved performance
+- **Responsive Design**: Mobile-friendly interface with PWA support
 
-## Установка
+## 🛠 Tech Stack
 
-1. Установите зависимости:
+### Backend
+- **FastAPI** - Modern, fast web framework for building APIs
+- **aiosqlite** - Asynchronous SQLite driver
+- **Pydantic** - Data validation using Python type annotations
+- **python-jose** - JWT token handling
+- **passlib** - Password hashing with bcrypt
+- **Pillow** - Image processing and optimization
+- **httpx** - Async HTTP client
+
+### Frontend
+- **Vanilla JavaScript** - No framework dependencies
+- **CSS3** - Modern styling with responsive design
+- **WebP** - Optimized image format
+
+### Database
+- **SQLite** - Lightweight, file-based database with async operations
+
+## 📦 Installation
+
+### Prerequisites
+- Python 3.8 or higher
+- pip package manager
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/OmarovABS/imperiya-vkusa.git
+cd imperiya-vkusa
+```
+
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Запустите сервер:
+3. Run the application:
 
-**Вариант 1 (рекомендуется):**
+**Option 1 (Recommended):**
 ```bash
 python run.py
 ```
-Этот скрипт запустит бэкенд и автоматически откроет сайт в браузере.
+This script starts the backend and automatically opens the site in your browser.
 
-**Вариант 2 (Windows):**
+**Option 2 (Windows):**
 ```bash
 start.bat
 ```
-Просто дважды кликните по файлу `start.bat`.
+Simply double-click the `start.bat` file.
 
-**Вариант 3 (ручной):**
+**Option 3 (Manual):**
 ```bash
 python -m app.main
 ```
 
-Или с помощью uvicorn:
+Or with uvicorn:
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 ```
 
-Теперь `app/main.py` отдаёт не только API, но и весь сайт (фронтенд
-лежит в папке `static/`). Одна команда — и доступны:
+### Access Points
+- **Website**: `http://localhost:8001/`
+- **Admin Panel**: `http://localhost:8001/admin.html`
+- **API Documentation**: `http://localhost:8001/docs`
 
-- Сайт: `http://localhost:8001/`
-- Админка: `http://localhost:8001/admin.html`
-- API: `http://localhost:8001/api/...`
+## ⚙️ Configuration
 
-## API документация
+All settings are located in `app/config.py`. For production, use environment variables:
 
-После запуска откройте:
-- Swagger UI: `http://localhost:8001/docs`
-- ReDoc: `http://localhost:8001/redoc`
+### Security (Change in Production!)
+```bash
+export SECRET_KEY="your-secret-key-min-32-chars"
+export ADMIN_USERNAME="your_admin_username"
+export ADMIN_PASSWORD="your_secure_password"
+```
 
-## Конфигурация
+### Telegram Notifications (Optional)
+```bash
+export TELEGRAM_BOT_TOKEN="your_bot_token"
+export TELEGRAM_CHAT_ID="your_chat_id"
+```
 
-Все настройки находятся в файле `config.py`:
-
-### Безопасность (измените в продакшене!)
-- `SECRET_KEY` - секретный ключ для JWT (минимум 32 символа)
-- `ADMIN_USERNAME` - логин администратора (по умолчанию: `Абдулбасир`)
-- `ADMIN_PASSWORD` - пароль администратора (по умолчанию: `19102007`)
-
-### Telegram (для уведомлений)
-- `TELEGRAM_BOT_TOKEN` - токен бота
-- `TELEGRAM_CHAT_ID` - ID чата для отправки уведомлений
-
-### Изображения
-- `MAX_IMAGE_SIZE` - максимальный размер изображения (по умолчанию: 5MB)
-- `WEBP_QUALITY` - качество WebP (по умолчанию: 85)
+### Image Settings
+- `MAX_IMAGE_SIZE`: Maximum image size (default: 5MB)
+- `WEBP_QUALITY`: WebP quality (default: 85)
 
 ### CORS
-- `CORS_ORIGINS` - список разрешённых origins для фронтенда
+Configure allowed origins via environment variable:
+```bash
+export CORS_ORIGINS="https://yourdomain.com,https://www.yourdomain.com"
+```
 
-## API Эндпоинты
+## 📡 API Endpoints
 
-### Публичные (для клиентов)
+### Public Endpoints
 
 #### `GET /api/products`
-Получить все товары (с кэшированием)
+Get all products (with caching)
 
-**Ответ:**
+**Response:**
 ```json
 [
   {
     "id": 1,
-    "name": "Филадельфия",
-    "description": "Рис, нори, лосось, сливочный сыр",
+    "name": "Philadelphia Roll",
+    "description": "Rice, nori, salmon, cream cheese",
     "price": 450,
     "weight": 250,
-    "category": "Роллы",
+    "category": "Rolls",
     "image_url": "/static/uploads/abc123.webp",
     "is_available": true,
     "created_at": "2024-01-01T00:00:00",
@@ -101,18 +132,18 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 ```
 
 #### `POST /api/orders`
-Создать заказ
+Create a new order
 
-**Тело запроса:**
+**Request Body:**
 ```json
 {
-  "customer_name": "Иван Иванов",
+  "customer_name": "Ivan Ivanov",
   "phone": "+79001234567",
-  "address": "ул. Пушкина, д. 10, кв. 5",
+  "address": "Pushkin St. 10, Apt. 5",
   "items": [
     {
       "product_id": 1,
-      "product_name": "Филадельфия",
+      "product_name": "Philadelphia Roll",
       "quantity": 2,
       "price": 450
     }
@@ -120,16 +151,16 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 }
 ```
 
-### Авторизация
+### Authentication
 
 #### `POST /api/auth/login`
-Войти в систему (OAuth2 Password Flow)
+Login to the system (OAuth2 Password Flow)
 
-**Тело запроса (form-data):**
-- `username`: логин
-- `password`: пароль
+**Request Body (form-data):**
+- `username`: admin username
+- `password`: admin password
 
-**Ответ:**
+**Response:**
 ```json
 {
   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
@@ -137,166 +168,135 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
 }
 ```
 
-### Защищённые (для админки)
+### Admin Endpoints (Protected)
 
-Все эндпоинты требуют заголовок `Authorization: Bearer <token>`
+All admin endpoints require `Authorization: Bearer <token>` header
 
 #### `POST /api/admin/products`
-Создать товар
+Create a new product
 
-**Тело запроса (form-data):**
-- `name`: название
-- `description`: описание (опционально)
-- `price`: цена (в рублях)
-- `weight`: вес в граммах (опционально)
-- `category`: категория
-- `is_available`: доступность (по умолчанию: true)
-- `image`: файл изображения (опционально)
+**Request Body (form-data):**
+- `name`: product name
+- `description`: product description (optional)
+- `price`: price in rubles
+- `weight`: weight in grams (optional)
+- `category`: product category
+- `is_available`: availability (default: true)
+- `image`: image file (optional)
 
 #### `PUT /api/admin/products/{id}`
-Редактировать товар
+Update a product
 
-**Тело запроса (form-data):**
-- Все поля опциональны
-- `image`: файл изображения (опционально)
+**Request Body (form-data):**
+- All fields are optional
+- `image`: image file (optional)
 
 #### `DELETE /api/admin/products/{id}`
-Удалить товар
+Delete a product
 
 #### `GET /api/admin/orders`
-Получить список заказов
+Get all orders
 
-## Структура проекта
+#### `PUT /api/admin/orders/{id}`
+Update order status
+
+#### `DELETE /api/admin/orders/{id}`
+Delete an order
+
+## 📁 Project Structure
 
 ```
 imperiya-vkusa/
 ├── app/
 │   ├── __init__.py
-│   ├── main.py               # Точка входа: создание приложения, CORS, роутеры, lifespan
-│   ├── config.py             # Конфигурация и секреты
-│   ├── database.py           # Работа с БД (aiosqlite)
-│   ├── schemas.py            # Pydantic модели
-│   ├── auth.py               # Авторизация (JWT, пароли)
-│   ├── api/                  # Роутеры
+│   ├── main.py               # Application entry point, CORS, routers, lifespan
+│   ├── config.py             # Configuration and secrets
+│   ├── database.py           # Database operations (aiosqlite)
+│   ├── schemas.py            # Pydantic models
+│   ├── auth.py               # Authentication (JWT, passwords)
+│   ├── api/                  # API routers
 │   │   ├── __init__.py
-│   │   ├── public.py         # Публичные: просмотр товаров, создание заказов
+│   │   ├── public.py         # Public: product browsing, order creation
 │   │   ├── auth.py           # POST /api/auth/login
-│   │   ├── admin.py          # Админка: товары и заказы
-│   │   └── pages.py          # HTML-страницы и webmanifest
-│   └── services/             # Бизнес-логика
+│   │   ├── admin.py          # Admin: products and orders management
+│   │   └── pages.py          # HTML pages and webmanifest
+│   └── services/             # Business logic
 │       ├── __init__.py
-│       ├── cache.py          # Кэширование товаров
-│       ├── images.py         # Обработка и удаление изображений
-│       └── notifications.py  # Telegram-уведомления (заглушка)
-├── static/                   # Весь фронтенд (раздаётся по /static/...)
-│   ├── index.html            # Витрина сайта
-│   ├── admin.html            # Админ-панель
-│   ├── privacy.html          # Политика конфиденциальности
-│   ├── terms.html            # Условия использования
-│   ├── manifest.webmanifest  # PWA-манифест
-│   ├── css/                  # Стили (styles.css, admin.css)
-│   ├── js/                   # Скрипты (клиент + админка)
-│   ├── img/                  # Локальные изображения (лого, блюда, иконки)
-│   └── uploads/              # Загруженные изображения (создаётся автоматически)
-├── run.py                    # Запуск сервера и открытие сайта в браузере
-├── start.bat                 # Запуск сервера одним кликом (Windows)
-├── requirements.txt          # Зависимости
+│       ├── cache.py          # Product caching
+│       ├── images.py         # Image processing and deletion
+│       └── notifications.py  # Telegram notifications (stub)
+├── static/                   # Frontend assets (served via /static/...)
+│   ├── index.html            # Main website
+│   ├── admin.html            # Admin panel
+│   ├── privacy.html          # Privacy policy
+│   ├── terms.html            # Terms of service
+│   ├── manifest.webmanifest  # PWA manifest
+│   ├── css/                  # Stylesheets (styles.css, admin.css)
+│   ├── js/                   # JavaScript (client + admin)
+│   ├── img/                  # Local images (logo, dishes, icons)
+│   └── uploads/              # Uploaded images (auto-created)
+├── run.py                    # Server startup script with browser open
+├── start.bat                 # One-click server startup (Windows)
+├── requirements.txt          # Python dependencies
 ├── README.md
-└── delivery.db               # SQLite база данных (создаётся автоматически)
+└── delivery.db               # SQLite database (auto-created)
 ```
 
-## Особенности
+## ✨ Key Features
 
-### Кэширование товаров
-Товары кэшируются в памяти на 5 минут (настраивается в `config.py`). Это снижает нагрузку на БД при частых запросах.
+### Product Caching
+Products are cached in memory for 5 minutes (configurable in `config.py`). This reduces database load on frequent requests.
 
-### Обработка изображений
-- Автоматическая конвертация в WebP
-- Оптимизация размера
-- Уникальные имена файлов
-- Удаление старых изображений при обновлении
+### Image Processing
+- Automatic WebP conversion
+- Size optimization
+- Unique filename generation
+- Old image cleanup on updates
 
-### База данных
-- SQLite (один файл `delivery.db`)
-- Асинхронные операции через aiosqlite
-- Автоматическое создание таблиц при первом запуске
-- Дефолтный админ создаётся автоматически
+### Database
+- SQLite (single file `delivery.db`)
+- Async operations via aiosqlite
+- Automatic table creation on first run
+- Default admin user auto-created
 
-## Безопасность
+## 🔒 Security
 
-⚠️ **Важно:** Перед продакшеном:
-1. Задайте `SECRET_KEY` через переменную окружения (иначе при каждом
-   перезапуске сервера генерируется новый случайный ключ, и все выданные
-   ранее токены авторизации перестают быть валидными).
-2. Задайте `ADMIN_USERNAME` / `ADMIN_PASSWORD` через переменные окружения —
-   значения по умолчанию только для локальной разработки.
-3. Настройте `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID` для уведомлений.
-4. Добавьте ваш реальный домен в `CORS_ORIGINS`, если фронтенд будет
-   работать на отдельном домене/порте от бэкенда.
+⚠️ **Important:** Before deploying to production:
+
+1. Set `SECRET_KEY` via environment variable (otherwise a random key is generated on each server restart, invalidating all previously issued auth tokens)
+2. Set `ADMIN_USERNAME` / `ADMIN_PASSWORD` via environment variables - default values are for local development only
+3. Configure `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` for notifications
+4. Add your real domain to `CORS_ORIGINS` if frontend will run on a separate domain/port from backend
 
 ```bash
-export SECRET_KEY="сгенерируйте-длинную-случайную-строку"
-export ADMIN_USERNAME="ваш_логин"
-export ADMIN_PASSWORD="сложный-пароль"
+export SECRET_KEY="generate-a-long-random-string"
+export ADMIN_USERNAME="your_username"
+export ADMIN_PASSWORD="complex-password"
 ```
 
-## Исправленные ошибки
+## 🎯 Technical Highlights
 
-- **Подмена цены заказа.** `POST /api/orders` раньше брал цену товара
-  из тела запроса от клиента — то есть цену можно было подделать прямо в
-  браузере. Теперь цена всегда берётся из базы данных по `product_id`.
-- **Адрес доставки не собирался.** Форма оформления заказа не имела поля
-  «Адрес», поэтому в каждый заказ подставлялся адрес самого ресторана.
-  Добавлено поле адреса (обязательно для доставки, необязательно при
-  самовывозе).
-- **`serve_frontend.py` был сломан** — ссылался на несуществующую папку
-  `../frontend`. Функциональность перенесена прямо в `main.py`.
-- **Секреты в коде.** `SECRET_KEY` содержал реальные имя/фамилию и дату
-  рождения, а пароль администратора совпадал с этой датой рождения —
-  оба значения легко угадать. Заменено на переменные окружения со
-  случайным ключом по умолчанию.
-- **CORS**: список origins одновременно содержал `"*"` и конкретные
-  адреса вместе с `allow_credentials=True` — по спецификации CORS это
-  недопустимая комбинация. Убрали `"*"`.
-- **Хардкод `http://localhost:8000`** в `menu-data.js` и
-  `admin-config.js` — сайт не смог бы работать ни на каком домене,
-  кроме локального. Заменено на относительные пути.
-- **Админка не открывалась из-за дублирующего объявления**
-  `const API_BASE_URL`. Он объявлялся и в `menu-data.js`, и в
-  `admin-config.js` (оба подключены на странице `admin.html`), из-за чего
-  браузер выбрасывал `SyntaxError: Identifier 'API_BASE_URL' has already
-  been declared` и весь скрипт админ-панели умирал ещё до загрузки.
-  Объявление заменено на общий глобал `window.API_BASE_URL`,
-  который устанавливается один раз.
-- **Логин администратора.** Логин и пароль настроены: `Абдулбасир` /
-  `19102007` (в `app/config.py` и в базе данных).
-- **Внешние изображения** (фото с чужих сайтов, временные превью Google,
-  ссылка на кириллический домен) заменены на локальные файлы в папке
-  `static/img/` — сайт больше не зависит от того, что эти сторонние ссылки
-  продолжат работать.
+### Security Best Practices
+- **Price validation**: Order prices are fetched from the database (not from client requests) to prevent price manipulation
+- **JWT authentication**: Secure token-based authentication with bcrypt password hashing
+- **Environment variables**: Sensitive configuration via environment variables
+- **CORS configuration**: Properly configured cross-origin resource sharing
 
-## Папка с изображениями
+### Code Quality
+- **Async/await**: Full async architecture using FastAPI and aiosqlite
+- **Type hints**: Comprehensive type annotations for better code maintainability
+- **Modular structure**: Clean separation of concerns with dedicated modules for auth, database, and business logic
+- **Error handling**: Proper exception handling and validation
 
-`static/img/` — сгенерированные локально иллюстрации в стиле сайта (плоские
-иконки в фирменных цветах), чтобы не тянуть чужие фото по ссылкам:
+### Performance
+- **In-memory caching**: Reduces database load for frequently accessed data
+- **Image optimization**: Automatic WebP conversion for faster load times
+- **Async operations**: Non-blocking database operations for better concurrency
 
-```
-static/img/
-├── logo.png                     — логотип
-├── hero/                        — картинки для шапки сайта
-│   ├── pizza-hero.jpg
-│   └── category-{pizza,rolls,burgers,snacks}.jpg
-├── quality/                     — блок «Качество»
-│   └── {dough,rice,vegetables,halal}.jpg
-└── dishes/                      — по одной на каждое блюдо + placeholder
-```
+## 📝 Development Notes
 
-Это не настоящие фотографии блюд — у среды выполнения нет доступа в
-интернет, чтобы скачать реальные фото. Рекомендуется заменить файлы в
-`static/img/dishes/` на собственные фотографии перед запуском в продакшен
-(достаточно сохранить те же имена файлов, либо загрузить новое фото
-через админку).
+The `static/img/` directory contains placeholder images. For production deployment, replace these with actual product photos or upload new images through the admin panel.
 
-## Лицензия
+## 📄 License
 
-MIT
+MIT License

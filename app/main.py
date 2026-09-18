@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Imperiya Vkusa API", version="1.0.0", lifespan=lifespan)
+    app = FastAPI(title="FoodDrop API", version="1.0.0", lifespan=lifespan)
 
     # CORS middleware
     app.add_middleware(

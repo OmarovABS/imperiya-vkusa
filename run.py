@@ -16,7 +16,7 @@ BACKEND_CMD = ["python", "-m", "app.main"]
 
 
 def main():
-    print("🚀 Запуск Империи Вкуса...")
+    print("🚀 Запуск FoodDrop...")
     print("=" * 50)
 
     # Запускаем бэкенд в отдельном процессе

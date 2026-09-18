@@ -243,24 +243,25 @@ function showCurrentCategory() {
   });
 })();
 
-// ---- живая синхронизация с бэкеном ----
-// Меню обновляется по действиям пользователя и при возврате на вкладку
-// (без постоянного фонового опроса), чтобы не нагружать сервер.
+// ---- живая синхронизация с бэкендом ----
+// Меню опрашивается каждые 5 секунд, поэтому блюда, добавленные через
+// админку, появляются на сайте автоматически без перезагрузки страницы.
 async function refreshMenuFromAPI() {
   try {
     const data = await fetchMenuData();
     if (!data) return;
     if (JSON.stringify(data) !== JSON.stringify(menuCache)) {
       menuCache = data;
-      const active = document.querySelector('.tab-btn.active');
-      if (active) {
-        const cat = active.dataset.tab;
+      menuAnimOn = false;
+      ['pizza', 'rolls', 'burgers', 'snacks'].forEach(cat => {
         const count = menuCountPerCat[cat] || MENU_PAGE_SIZE;
         renderCategory(cat, count);
-      }
+      });
     }
   } catch (e) { /* ignore */ }
 }
+
+setInterval(() => { refreshMenuFromAPI(); }, 5000);
 
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') refreshMenuFromAPI();

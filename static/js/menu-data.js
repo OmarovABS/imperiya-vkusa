@@ -1,7 +1,32 @@
 // ===================== МЕНЮ (подключение к FastAPI бэкенду) =====================
-// Блюда загружаются из бэкенда API.
+// Блюда загружаются из бэкенда API. Если бэкенд недоступен (сайт открыт как
+// файл file:// или на статическом хостинге), используется STATIC_MENU ниже,
+// поэтому сайт выглядит одинаково в обоих режимах. Чтобы меню показывалось и
+// без сервера, заполните STATIC_MENU так же, как товары в базе данных.
 
 const TAG_CLASS_MAP = { 'Хит': 'tag-hit', 'Острый': 'tag-hot', 'Новинка': 'tag-new' };
+
+// Резервное меню для работы без бэкенда. Дублирует товары из базы данных.
+// Новые блюда, добавленные через админку, показываются на сайте через сервер
+// автоматически; чтобы они были видны и без сервера — добавьте их сюда.
+const STATIC_MENU = {
+  pizza: [
+    {
+      id: 32,
+      name: 'Пепперони',
+      desc: 'Пицца «Пепперони» — это один из самых популярных и узнаваемых видов пиццы в мире, отличающийся своим минималистичным составом и пикантным, островатым вкусом',
+      price: 400,
+      img: 'https://zmktver.ru/upload/medialibrary/b58/tsq661cf7s2d73d8b0v8pp8jnj68xsjd/2149187953.jpg',
+      alt: 'Пепперони',
+      tag: '',
+      tagClass: '',
+      soldout: false
+    }
+  ],
+  rolls: [],
+  burgers: [],
+  snacks: []
+};
 // Relative — works whether the site runs on localhost or a real domain,
 // since main.py now serves the frontend and the API from the same origin.
 // Set as a shared global so it can be safely defined once even when both
@@ -27,9 +52,8 @@ async function fetchMenuData() {
   try {
     const response = await fetch(`${API_BASE_URL}/api/products`);
     if (!response.ok) {
-      console.error('Ошибка загрузки меню:', response.status);
-      window.MENU_LOAD_FAILED = true;
-      return { pizza: [], rolls: [], burgers: [], snacks: [] };
+      console.warn('Бэкенд недоступен, использую STATIC_MENU. Статус:', response.status);
+      return STATIC_MENU;
     }
     window.MENU_LOAD_FAILED = false;
     
@@ -53,9 +77,8 @@ async function fetchMenuData() {
     
     return grouped;
   } catch (e) {
-    console.error('Ошибка загрузки меню:', e);
-    window.MENU_LOAD_FAILED = true;
-    return { pizza: [], rolls: [], burgers: [], snacks: [] };
+    console.warn('Бэкенд недоступен, использую STATIC_MENU:', e);
+    return STATIC_MENU;
   }
 }
 
