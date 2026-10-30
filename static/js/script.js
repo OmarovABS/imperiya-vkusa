@@ -102,6 +102,25 @@ function createFoodCard(item, animIndex) {
   img.loading = 'lazy';
   img.decoding = 'async';
   media.appendChild(img);
+
+  const infoBtn = document.createElement('button');
+  infoBtn.className = 'food-info-btn';
+  infoBtn.type = 'button';
+  infoBtn.textContent = 'i';
+  infoBtn.title = 'Описание';
+  infoBtn.setAttribute('aria-label', 'Показать описание');
+  infoBtn.setAttribute('aria-expanded', 'false');
+  infoBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const willOpen = !card.classList.contains('open');
+    closeOpenCards();
+    if (willOpen) {
+      card.classList.add('open');
+      infoBtn.setAttribute('aria-expanded', 'true');
+    }
+  });
+  media.appendChild(infoBtn);
+
   card.appendChild(media);
 
   const body = document.createElement('div');
@@ -112,6 +131,7 @@ function createFoodCard(item, animIndex) {
   body.appendChild(h3);
 
   const p = document.createElement('p');
+  p.className = 'food-desc';
   p.textContent = item.desc;
   body.appendChild(p);
 
@@ -144,6 +164,19 @@ function createFoodCard(item, animIndex) {
 
   return card;
 }
+
+function closeOpenCards(except) {
+  document.querySelectorAll('.food-card.open').forEach(card => {
+    if (card === except) return;
+    card.classList.remove('open');
+    const btn = card.querySelector('.food-info-btn');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  });
+}
+
+document.addEventListener('click', (e) => {
+  closeOpenCards(e.target.closest('.food-card'));
+});
 
 function observeCategorySentinel(cat) {
   const sentinel = document.querySelector(`[data-grid="${cat}"] .menu-load-more`);
@@ -267,110 +300,6 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') refreshMenuFromAPI();
 });
 
-// ---- build the slicing pizza SVG ----
-const NUM_SLICES = 8;
-const CX = 300, CY = 300, R = 280;
-const PIZZA_IMG = 'img/hero/pizza-hero.jpg';
-const svgNS = 'http://www.w3.org/2000/svg';
-const xlinkNS = 'http://www.w3.org/1999/xlink';
-const svg = document.getElementById('pizzaSvg');
-const defs = document.createElementNS(svgNS, 'defs');
-svg.appendChild(defs);
-
-const slices = [];
-for (let i = 0; i < NUM_SLICES; i++) {
-  const a1 = (-90 + i * (360 / NUM_SLICES)) * Math.PI / 180;
-  const a2 = (-90 + (i + 1) * (360 / NUM_SLICES)) * Math.PI / 180;
-  const x1 = CX + R * Math.cos(a1), y1 = CY + R * Math.sin(a1);
-  const x2 = CX + R * Math.cos(a2), y2 = CY + R * Math.sin(a2);
-  const d = `M${CX},${CY} L${x1.toFixed(2)},${y1.toFixed(2)} A${R},${R} 0 0 1 ${x2.toFixed(2)},${y2.toFixed(2)} Z`;
-
-  const clipId = 'slice-clip-' + i;
-  const clipPath = document.createElementNS(svgNS, 'clipPath');
-  clipPath.setAttribute('id', clipId);
-  const clipPathShape = document.createElementNS(svgNS, 'path');
-  clipPathShape.setAttribute('d', d);
-  clipPath.appendChild(clipPathShape);
-  defs.appendChild(clipPath);
-
-  const g = document.createElementNS(svgNS, 'g');
-  g.setAttribute('clip-path', `url(#${clipId})`);
-
-  const img = document.createElementNS(svgNS, 'image');
-  img.setAttributeNS(xlinkNS, 'href', PIZZA_IMG);
-  img.setAttribute('href', PIZZA_IMG);
-  img.setAttribute('x', 0);
-  img.setAttribute('y', 0);
-  img.setAttribute('width', 600);
-  img.setAttribute('height', 600);
-  img.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-  g.appendChild(img);
-
-  const divider = document.createElementNS(svgNS, 'path');
-  divider.setAttribute('d', d);
-  divider.setAttribute('fill', 'none');
-  divider.setAttribute('stroke', 'rgba(20,16,13,0.6)');
-  divider.setAttribute('stroke-width', '3');
-  g.appendChild(divider);
-
-  svg.appendChild(g);
-  slices.push({ g, angle: (a1 + a2) / 2 });
-}
-
-function updateSlices(progress) {
-  const eased = progress < 0.5 ? 2 * progress * progress : 1 - Math.pow(-2 * progress + 2, 2) / 2;
-  slices.forEach((s, i) => {
-    const dist = eased * 130;
-    const dx = Math.cos(s.angle) * dist;
-    const dy = Math.sin(s.angle) * dist;
-    const rot = eased * 9 * (i % 2 === 0 ? 1 : -1);
-    s.g.setAttribute('transform', `translate(${dx.toFixed(2)}, ${dy.toFixed(2)}) rotate(${rot.toFixed(2)} 300 300)`);
-    s.g.style.filter = `drop-shadow(0 ${(10 * eased).toFixed(1)}px ${(20 * eased).toFixed(1)}px rgba(0,0,0,${(0.5 * eased).toFixed(2)}))`;
-  });
-}
-
-const wrapper = document.getElementById('splitWrapper');
-const pizzaWrap = document.getElementById('pizzaWrap');
-const flyGrid = document.getElementById('flyGrid');
-const flyStage = flyGrid.parentElement;
-
-let animStarted = false;
-function playSliceAnimation() {
-  if (animStarted) return;
-  animStarted = true;
-  flyStage.classList.add('expanded');
-  const DURATION = 1500;
-  const start = performance.now();
-  function frame(now) {
-    const p = Math.min(1, Math.max(0, (now - start) / DURATION));
-    updateSlices(p);
-    if (p < 1) {
-      requestAnimationFrame(frame);
-    } else {
-      pizzaWrap.classList.add('gone');
-      flyGrid.classList.add('show');
-    }
-  }
-  requestAnimationFrame(frame);
-}
-
-if (reduceMotion) {
-  updateSlices(0.15);
-  pizzaWrap.classList.add('gone');
-  flyGrid.classList.add('show');
-  flyStage.classList.add('expanded');
-} else {
-  const sliceIO = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        playSliceAnimation();
-        sliceIO.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.4 });
-  sliceIO.observe(wrapper);
-}
-
 // ---- phone call modal ----
 const phoneModal = document.getElementById('phoneModal');
 const phoneNumber = 'tel:89898851080';
@@ -411,12 +340,14 @@ const checkoutModal = document.getElementById('checkoutModal');
 const checkoutList = document.getElementById('checkoutList');
 const checkoutTotal = document.getElementById('checkoutTotal');
 const checkoutName = document.getElementById('checkoutName');
+const checkoutEmail = document.getElementById('checkoutEmail');
 const checkoutPhone = document.getElementById('checkoutPhone');
 const checkoutAddress = document.getElementById('checkoutAddress');
 const checkoutAddressField = document.getElementById('checkoutAddressField');
 const checkoutConfirm = document.getElementById('checkoutConfirm');
 const checkoutCancel = document.getElementById('checkoutCancel');
 const STORE_ADDRESS = 'Кизляр, ул. Победы 91/1';
+const WHATSAPP_NUMBER = '79898851080'; // Номер телефона для WhatsApp (без +)
 
 const cart = new Map();
 let deliveryType = 'delivery';
@@ -499,7 +430,7 @@ cartCheckoutBtn.addEventListener('click', () => {
     checkoutList.appendChild(row);
   });
   checkoutTotal.textContent = fmt(total);
-  checkoutName.value = ''; checkoutPhone.value = ''; checkoutAddress.value = '';
+  checkoutName.value = ''; checkoutEmail.value = ''; checkoutPhone.value = ''; checkoutAddress.value = '';
   checkoutAddressField.style.display = deliveryType === 'pickup' ? 'none' : '';
   checkoutModal.classList.add('open');
 });
@@ -507,39 +438,46 @@ cartCheckoutBtn.addEventListener('click', () => {
 checkoutCancel.addEventListener('click', () => checkoutModal.classList.remove('open'));
 checkoutModal.addEventListener('click', e => { if (e.target === checkoutModal) checkoutModal.classList.remove('open'); });
 
-// ---- заказы: отправка на бэкенд ----
-checkoutConfirm.addEventListener('click', async () => {
+// ---- заказы: отправка в WhatsApp ----
+checkoutConfirm.addEventListener('click', () => {
   const name = checkoutName.value.trim();
+  const email = checkoutEmail.value.trim();
   const phone = checkoutPhone.value.trim();
   const address = checkoutAddress.value.trim();
   const consent = document.getElementById('checkoutConsent').checked;
-  
+
   if (!name || !phone) { alert('Заполните имя и телефон'); return; }
   if (deliveryType === 'delivery' && address.length < 5) { alert('Укажите адрес доставки'); return; }
   if (!consent) { alert('Необходимо согласие на обработку персональных данных'); return; }
 
-  const items = Array.from(cart.values()).map(i => ({
-    id: i.id,
-    dish_title: i.name,
-    price: i.price,
-    quantity: i.qty
-  }));
+  // Формируем красивое сообщение для WhatsApp
+  let message = `🍕 *Новый заказ от NightBite*\n\n`;
+  message += `👤 Имя: ${name}\n`;
+  if (email) message += `📧 Email: ${email}\n`;
+  message += `📱 Телефон: ${phone}\n`;
+  message += `📍 Адрес: ${deliveryType === 'pickup' ? `Самовывоз: ${STORE_ADDRESS}` : address}\n\n`;
+  message += `📦 *Заказ:*\n`;
 
-  try {
-    await apiCreateOrder({
-      user_name: name,
-      user_telephone: phone,
-      delivery_type: deliveryType,
-      address: deliveryType === 'pickup' ? `Самовывоз: ${STORE_ADDRESS}` : address,
-      items: items
-    });
-    alert('Спасибо! Заказ отправлен — мы свяжемся с вами.');
-    cart.clear();
-    renderCart();
-    checkoutModal.classList.remove('open');
-  } catch (err) {
-    alert('Ошибка при отправке заказа: ' + err.message);
-  }
+  let total = 0;
+  cart.forEach(i => {
+    const itemTotal = i.price * i.qty;
+    total += itemTotal;
+    message += `• ${i.name} × ${i.qty} — ${fmt(itemTotal)}\n`;
+  });
+
+  message += `\n💰 *Итого: ${fmt(total)}*`;
+
+  // Кодируем сообщение для URL
+  const encodedMessage = encodeURIComponent(message);
+  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+  // Открываем WhatsApp в новой вкладке
+  window.open(whatsappUrl, '_blank');
+
+  // Очищаем корзину и закрываем модалку
+  cart.clear();
+  renderCart();
+  checkoutModal.classList.remove('open');
 });
 
 renderCart();

@@ -1,6 +1,6 @@
 {
-  "name": "FoodDrop",
-  "short_name": "FoodDrop",
+  "name": "NightBite",
+  "short_name": "NightBite",
   "description": "Пицца, бургеры и роллы с доставкой в Кизляре до 03:00",
   "start_url": "/",
   "scope": "/",

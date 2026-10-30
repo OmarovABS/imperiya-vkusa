@@ -1,43 +1,31 @@
-# FoodDrop - Food Delivery Platform
+# NightBite - Static Food Delivery Website
 
-A modern full-stack food delivery application built with FastAPI, featuring a responsive frontend and admin panel.
+A modern static food delivery website with WhatsApp order integration. No backend required - just open the HTML file in a browser!
 
 ## 🚀 Features
 
-- **Product Catalog**: Browse and filter food items by category
-- **Order Management**: Create and track orders with real-time status updates
-- **Admin Panel**: Full CRUD operations for products and order management
-- **Image Processing**: Automatic WebP conversion and optimization
-- **JWT Authentication**: Secure admin access with OAuth2
-- **Caching**: In-memory caching for improved performance
+- **Static Website**: Works without any server - just open `static/index.html` in a browser
+- **Product Catalog**: Browse food items by category (pizza, rolls, burgers, snacks)
+- **WhatsApp Orders**: Orders are sent directly to WhatsApp with a formatted message
 - **Responsive Design**: Mobile-friendly interface with PWA support
+- **Easy Menu Management**: Edit menu directly in `static/js/menu-data.js`
 
 ## 🛠 Tech Stack
-
-### Backend
-- **FastAPI** - Modern, fast web framework for building APIs
-- **aiosqlite** - Asynchronous SQLite driver
-- **Pydantic** - Data validation using Python type annotations
-- **python-jose** - JWT token handling
-- **passlib** - Password hashing with bcrypt
-- **Pillow** - Image processing and optimization
-- **httpx** - Async HTTP client
 
 ### Frontend
 - **Vanilla JavaScript** - No framework dependencies
 - **CSS3** - Modern styling with responsive design
-- **WebP** - Optimized image format
+- **HTML5** - Semantic markup
 
-### Database
-- **SQLite** - Lightweight, file-based database with async operations
+### No Backend Required
+- No database needed
+- No server setup
+- Works on any static hosting (GitHub Pages, Netlify, Vercel, etc.)
+- Can be opened directly as a file
 
-## 📦 Installation
+## 📦 Installation & Usage
 
-### Prerequisites
-- Python 3.8 or higher
-- pip package manager
-
-### Setup
+### Quick Start (No Installation Required)
 
 1. Clone the repository:
 ```bash
@@ -45,257 +33,182 @@ git clone https://github.com/OmarovABS/imperiya-vkusa.git
 cd imperiya-vkusa
 ```
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+2. Open the website:
+   - **Option 1**: Double-click `static/index.html`
+   - **Option 2**: Drag `static/index.html` into your browser
+   - **Option 3**: Use a local server (optional):
+     ```bash
+     # Using Python
+     cd static
+     python -m http.server 8000
+     # Then open http://localhost:8000
+     ```
 
-3. Run the application:
+### Deploy to Static Hosting
 
-**Option 1 (Recommended):**
-```bash
-python run.py
-```
-This script starts the backend and automatically opens the site in your browser.
+#### GitHub Pages
+1. Push the repository to GitHub
+2. Go to Settings → Pages
+3. Select `main` branch and `/static` folder as source
+4. Your site will be available at `https://yourusername.github.io/imperiya-vkusa`
 
-**Option 2 (Windows):**
-```bash
-start.bat
-```
-Simply double-click the `start.bat` file.
+#### Netlify
+1. Install Netlify CLI: `npm install -g netlify-cli`
+2. Run: `netlify deploy --prod -d static`
+3. Your site will be live instantly
 
-**Option 3 (Manual):**
-```bash
-python -m app.main
-```
-
-Or with uvicorn:
-```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8001
-```
-
-### Access Points
-- **Website**: `http://localhost:8001/`
-- **Admin Panel**: `http://localhost:8001/admin.html`
-- **API Documentation**: `http://localhost:8001/docs`
+#### Vercel
+1. Install Vercel CLI: `npm install -g vercel`
+2. Run: `vercel --prod`
+3. Follow the prompts
 
 ## ⚙️ Configuration
 
-All settings are located in `app/config.py`. For production, use environment variables:
+### Change WhatsApp Number
 
-### Security (Change in Production!)
-```bash
-export SECRET_KEY="your-secret-key-min-32-chars"
-export ADMIN_USERNAME="your_admin_username"
-export ADMIN_PASSWORD="your_secure_password"
+Edit `static/js/script.js`, line 421:
+```javascript
+const WHATSAPP_NUMBER = '79898851080'; // Change to your number (without +)
 ```
 
-### Telegram Notifications (Optional)
-```bash
-export TELEGRAM_BOT_TOKEN="your_bot_token"
-export TELEGRAM_CHAT_ID="your_chat_id"
-```
+### Edit Menu
 
-### Image Settings
-- `MAX_IMAGE_SIZE`: Maximum image size (default: 5MB)
-- `WEBP_QUALITY`: WebP quality (default: 85)
-
-### CORS
-Configure allowed origins via environment variable:
-```bash
-export CORS_ORIGINS="https://yourdomain.com,https://www.yourdomain.com"
-```
-
-## 📡 API Endpoints
-
-### Public Endpoints
-
-#### `GET /api/products`
-Get all products (with caching)
-
-**Response:**
-```json
-[
-  {
-    "id": 1,
-    "name": "Philadelphia Roll",
-    "description": "Rice, nori, salmon, cream cheese",
-    "price": 450,
-    "weight": 250,
-    "category": "Rolls",
-    "image_url": "/static/uploads/abc123.webp",
-    "is_available": true,
-    "created_at": "2024-01-01T00:00:00",
-    "updated_at": "2024-01-01T00:00:00"
-  }
-]
-```
-
-#### `POST /api/orders`
-Create a new order
-
-**Request Body:**
-```json
-{
-  "customer_name": "Ivan Ivanov",
-  "phone": "+79001234567",
-  "address": "Pushkin St. 10, Apt. 5",
-  "items": [
+Edit `static/js/menu-data.js` to add or modify dishes:
+```javascript
+const STATIC_MENU = {
+  pizza: [
     {
-      "product_id": 1,
-      "product_name": "Philadelphia Roll",
-      "quantity": 2,
-      "price": 450
+      id: 1,
+      name: 'Пепперони',
+      desc: 'Описание блюда',
+      price: 400,
+      img: 'img/dishes/pizza.jpg', // or external URL
+      alt: 'Пепперони',
+      tag: 'Хит', // optional: 'Хит', 'Острый', 'Новинка'
+      tagClass: 'tag-hit', // optional: 'tag-hit', 'tag-hot', 'tag-new'
+      soldout: false
     }
-  ]
-}
+  ],
+  rolls: [],
+  burgers: [],
+  snacks: []
+};
 ```
 
-### Authentication
+### Change Contact Information
 
-#### `POST /api/auth/login`
-Login to the system (OAuth2 Password Flow)
-
-**Request Body (form-data):**
-- `username`: admin username
-- `password`: admin password
-
-**Response:**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "token_type": "bearer"
-}
-```
-
-### Admin Endpoints (Protected)
-
-All admin endpoints require `Authorization: Bearer <token>` header
-
-#### `POST /api/admin/products`
-Create a new product
-
-**Request Body (form-data):**
-- `name`: product name
-- `description`: product description (optional)
-- `price`: price in rubles
-- `weight`: weight in grams (optional)
-- `category`: product category
-- `is_available`: availability (default: true)
-- `image`: image file (optional)
-
-#### `PUT /api/admin/products/{id}`
-Update a product
-
-**Request Body (form-data):**
-- All fields are optional
-- `image`: image file (optional)
-
-#### `DELETE /api/admin/products/{id}`
-Delete a product
-
-#### `GET /api/admin/orders`
-Get all orders
-
-#### `PUT /api/admin/orders/{id}`
-Update order status
-
-#### `DELETE /api/admin/orders/{id}`
-Delete an order
+Edit `static/index.html`:
+- Phone number: lines 33, 297
+- Address: lines 257, 293
+- Store address (for pickup): `static/js/script.js`, line 420
 
 ## 📁 Project Structure
 
 ```
 imperiya-vkusa/
-├── app/
-│   ├── __init__.py
-│   ├── main.py               # Application entry point, CORS, routers, lifespan
-│   ├── config.py             # Configuration and secrets
-│   ├── database.py           # Database operations (aiosqlite)
-│   ├── schemas.py            # Pydantic models
-│   ├── auth.py               # Authentication (JWT, passwords)
-│   ├── api/                  # API routers
-│   │   ├── __init__.py
-│   │   ├── public.py         # Public: product browsing, order creation
-│   │   ├── auth.py           # POST /api/auth/login
-│   │   ├── admin.py          # Admin: products and orders management
-│   │   └── pages.py          # HTML pages and webmanifest
-│   └── services/             # Business logic
-│       ├── __init__.py
-│       ├── cache.py          # Product caching
-│       ├── images.py         # Image processing and deletion
-│       └── notifications.py  # Telegram notifications (stub)
-├── static/                   # Frontend assets (served via /static/...)
+├── static/                   # All website files
 │   ├── index.html            # Main website
-│   ├── admin.html            # Admin panel
 │   ├── privacy.html          # Privacy policy
 │   ├── terms.html            # Terms of service
 │   ├── manifest.webmanifest  # PWA manifest
-│   ├── css/                  # Stylesheets (styles.css, admin.css)
-│   ├── js/                   # JavaScript (client + admin)
-│   ├── img/                  # Local images (logo, dishes, icons)
-│   └── uploads/              # Uploaded images (auto-created)
-├── run.py                    # Server startup script with browser open
-├── start.bat                 # One-click server startup (Windows)
-├── requirements.txt          # Python dependencies
+│   ├── css/                  # Stylesheets
+│   │   └── styles.css
+│   ├── js/                   # JavaScript
+│   │   ├── script.js         # Main functionality
+│   │   └── menu-data.js      # Menu configuration
+│   └── img/                  # Images
+│       ├── logo.png
+│       ├── icons/
+│       ├── hero/
+│       ├── quality/
+│       └── dishes/           # Product images
+├── app/                      # Backend (not needed for static version)
 ├── README.md
-└── delivery.db               # SQLite database (auto-created)
+└── requirements.txt          # Not needed for static version
 ```
 
-## ✨ Key Features
+## ✨ How It Works
 
-### Product Caching
-Products are cached in memory for 5 minutes (configurable in `config.py`). This reduces database load on frequent requests.
+### Order Flow
 
-### Image Processing
-- Automatic WebP conversion
-- Size optimization
-- Unique filename generation
-- Old image cleanup on updates
+1. **Customer browses menu** - Products are loaded from `menu-data.js`
+2. **Adds items to cart** - Cart is stored in browser memory
+3. **Fills order form** - Name, Email, Phone, Address
+4. **Clicks "Confirm Order"** - WhatsApp opens with pre-filled message
+5. **Message format**:
+```
+🍕 Новый заказ от NightBite
 
-### Database
-- SQLite (single file `delivery.db`)
-- Async operations via aiosqlite
-- Automatic table creation on first run
-- Default admin user auto-created
+👤 Имя: [имя]
+📧 Email: [email]
+📱 Телефон: [телефон]
+📍 Адрес: [адрес]
 
-## 🔒 Security
+📦 Заказ:
+• Пепперони × 2 — 800 ₽
+• Филадельфия × 1 — 450 ₽
 
-⚠️ **Important:** Before deploying to production:
-
-1. Set `SECRET_KEY` via environment variable (otherwise a random key is generated on each server restart, invalidating all previously issued auth tokens)
-2. Set `ADMIN_USERNAME` / `ADMIN_PASSWORD` via environment variables - default values are for local development only
-3. Configure `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` for notifications
-4. Add your real domain to `CORS_ORIGINS` if frontend will run on a separate domain/port from backend
-
-```bash
-export SECRET_KEY="generate-a-long-random-string"
-export ADMIN_USERNAME="your_username"
-export ADMIN_PASSWORD="complex-password"
+💰 Итого: 1250 ₽
 ```
 
-## 🎯 Technical Highlights
+### Menu Management
 
-### Security Best Practices
-- **Price validation**: Order prices are fetched from the database (not from client requests) to prevent price manipulation
-- **JWT authentication**: Secure token-based authentication with bcrypt password hashing
-- **Environment variables**: Sensitive configuration via environment variables
-- **CORS configuration**: Properly configured cross-origin resource sharing
+- All menu items are defined in `static/js/menu-data.js`
+- To add a new dish, add it to the appropriate category array
+- Images can be local (`img/dishes/photo.jpg`) or external URLs
+- Categories: `pizza`, `rolls`, `burgers`, `snacks`
 
-### Code Quality
-- **Async/await**: Full async architecture using FastAPI and aiosqlite
-- **Type hints**: Comprehensive type annotations for better code maintainability
-- **Modular structure**: Clean separation of concerns with dedicated modules for auth, database, and business logic
-- **Error handling**: Proper exception handling and validation
+## 🎨 Customization
 
-### Performance
-- **In-memory caching**: Reduces database load for frequently accessed data
-- **Image optimization**: Automatic WebP conversion for faster load times
-- **Async operations**: Non-blocking database operations for better concurrency
+### Change Colors
+
+Edit `static/css/styles.css` and modify CSS variables in `:root`:
+```css
+:root {
+  --primary: #E8462A;
+  --cream: #F3E8D6;
+  /* ... */
+}
+```
+
+### Change Logo
+
+Replace `static/img/logo.png` with your logo.
+
+### Add Product Images
+
+Place product images in `static/img/dishes/` and reference them in `menu-data.js`.
+
+## 📱 PWA Support
+
+The site includes a PWA manifest for installation on mobile devices. To enable:
+1. Ensure the site is served over HTTPS (required for PWA)
+2. The manifest is already configured in `static/manifest.webmanifest`
+
+## 🔒 Security Notes
+
+- No sensitive data is stored on the server (there is no server)
+- Orders are sent directly to WhatsApp
+- Customer data is only shared via WhatsApp message
+- For GDPR compliance, update `static/privacy.html` with your policy
 
 ## 📝 Development Notes
 
-The `static/img/` directory contains placeholder images. For production deployment, replace these with actual product photos or upload new images through the admin panel.
+### Adding New Categories
+
+1. Add the category to `STATIC_MENU` in `menu-data.js`
+2. Add a tab button in `index.html` (around line 142)
+3. Add a tab panel in `index.html` (around line 148)
+
+### Testing Locally
+
+For the best experience, use a local server:
+```bash
+cd static
+python -m http.server 8000
+# or with Node.js
+npx serve
+```
 
 ## 📄 License
 

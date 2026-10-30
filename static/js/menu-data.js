@@ -1,154 +1,153 @@
-// ===================== МЕНЮ (подключение к FastAPI бэкенду) =====================
-// Блюда загружаются из бэкенда API. Если бэкенд недоступен (сайт открыт как
-// файл file:// или на статическом хостинге), используется STATIC_MENU ниже,
-// поэтому сайт выглядит одинаково в обоих режимах. Чтобы меню показывалось и
-// без сервера, заполните STATIC_MENU так же, как товары в базе данных.
+// ===================== МЕНЮ (статический режим) =====================
+// Сайт работает полностью статично. Блюда загружаются из STATIC_MENU.
+// Чтобы добавить или изменить блюда, редактируйте STATIC_MENU ниже.
 
 const TAG_CLASS_MAP = { 'Хит': 'tag-hit', 'Острый': 'tag-hot', 'Новинка': 'tag-new' };
 
-// Резервное меню для работы без бэкенда. Дублирует товары из базы данных.
-// Новые блюда, добавленные через админку, показываются на сайте через сервер
-// автоматически; чтобы они были видны и без сервера — добавьте их сюда.
+// Статическое меню. Добавляйте или изменяйте блюда здесь.
 const STATIC_MENU = {
   pizza: [
     {
-      id: 32,
+      id: 1,
       name: 'Пепперони',
       desc: 'Пицца «Пепперони» — это один из самых популярных и узнаваемых видов пиццы в мире, отличающийся своим минималистичным составом и пикантным, островатым вкусом',
       price: 400,
-      img: 'https://zmktver.ru/upload/medialibrary/b58/tsq661cf7s2d73d8b0v8pp8jnj68xsjd/2149187953.jpg',
+      img: 'img/hero/category-pizza.jpg',
       alt: 'Пепперони',
+      tag: 'Хит',
+      tagClass: 'tag-hit',
+      soldout: false
+    },
+    {
+      id: 2,
+      name: 'Маргарита',
+      desc: 'Классическая итальянская пицца с томатным соусом, моцареллой и свежим базиликом',
+      price: 350,
+      img: 'img/hero/category-pizza.jpg',
+      alt: 'Маргарита',
+      tag: '',
+      tagClass: '',
+      soldout: false
+    },
+    {
+      id: 3,
+      name: 'Четыре сыра',
+      desc: 'Пицца с четырьмя видами сыра: моцарелла, пармезан, горгонзола и чеддер',
+      price: 450,
+      img: 'img/hero/category-pizza.jpg',
+      alt: 'Четыре сыра',
       tag: '',
       tagClass: '',
       soldout: false
     }
   ],
-  rolls: [],
-  burgers: [],
-  snacks: []
+  rolls: [
+    {
+      id: 4,
+      name: 'Филадельфия',
+      desc: 'Классический ролл с лососем, сливочным сыром и огурцом',
+      price: 450,
+      img: 'img/hero/category-rolls.jpg',
+      alt: 'Филадельфия',
+      tag: 'Хит',
+      tagClass: 'tag-hit',
+      soldout: false
+    },
+    {
+      id: 5,
+      name: 'Дракон',
+      desc: 'Ролл с угрем, авокадо и огурцом, сверху унаги соус',
+      price: 480,
+      img: 'img/hero/category-rolls.jpg',
+      alt: 'Дракон',
+      tag: 'Острый',
+      tagClass: 'tag-hot',
+      soldout: false
+    },
+    {
+      id: 6,
+      name: 'Калифорния',
+      desc: 'Ролл с крабом, авокадо и огурцом, сверху икра',
+      price: 420,
+      img: 'img/hero/category-rolls.jpg',
+      alt: 'Калифорния',
+      tag: '',
+      tagClass: '',
+      soldout: false
+    }
+  ],
+  burgers: [
+    {
+      id: 7,
+      name: 'Чизбургер',
+      desc: 'Сочный бургер с говяжьей котлетой, сыром чеддер, салатом и соусом',
+      price: 320,
+      img: 'img/hero/category-burgers.jpg',
+      alt: 'Чизбургер',
+      tag: 'Хит',
+      tagClass: 'tag-hit',
+      soldout: false
+    },
+    {
+      id: 8,
+      name: 'Двойной чизбургер',
+      desc: 'Две говяжьи котлеты, двойной чеддер, салат, помидор и специальный соус',
+      price: 420,
+      img: 'img/hero/category-burgers.jpg',
+      alt: 'Двойной чизбургер',
+      tag: '',
+      tagClass: '',
+      soldout: false
+    },
+    {
+      id: 9,
+      name: 'Острый бургер',
+      desc: 'Бургер с халапеньо, острым соусом и говяжьей котлетой',
+      price: 380,
+      img: 'img/hero/category-burgers.jpg',
+      alt: 'Острый бургер',
+      tag: 'Острый',
+      tagClass: 'tag-hot',
+      soldout: false
+    }
+  ],
+  snacks: [
+    {
+      id: 10,
+      name: 'Картофель фри',
+      desc: 'Хрустящий картофель фри с соусом на выбор',
+      price: 150,
+      img: 'img/hero/category-snacks.jpg',
+      alt: 'Картофель фри',
+      tag: '',
+      tagClass: '',
+      soldout: false
+    },
+    {
+      id: 11,
+      name: 'Куриные крылышки',
+      desc: 'Сочные куриные крылышки в соусе барбекю',
+      price: 280,
+      img: 'img/hero/category-snacks.jpg',
+      alt: 'Куриные крылышки',
+      tag: 'Хит',
+      tagClass: 'tag-hit',
+      soldout: false
+    },
+    {
+      id: 12,
+      name: 'Наггетсы',
+      desc: 'Куриные наггетсы с хрустящей корочкой',
+      price: 220,
+      img: 'img/hero/category-snacks.jpg',
+      alt: 'Наггетсы',
+      tag: 'Новинка',
+      tagClass: 'tag-new',
+      soldout: false
+    }
+  ]
 };
-// Relative — works whether the site runs on localhost or a real domain,
-// since main.py now serves the frontend and the API from the same origin.
-// Set as a shared global so it can be safely defined once even when both
-// menu-data.js and admin-config.js are loaded on the same page.
-window.API_BASE_URL = window.API_BASE_URL || '';
-
-// Приводит путь к изображению к абсолютному URL:
-// - пути бэкенда (/static/...) склеиваются с API_BASE_URL
-// - абсолютные http(s) возвращаются как есть
-// - локальные пути (img/...) возвращаются как есть
-function resolveImageUrl(url) {
-  if (!url) return '';
-  if (/^https?:\/\//i.test(url)) return url;
-  if (url.startsWith('/')) return API_BASE_URL + url;
-  return url;
-}
-
-// Флаг: удалось ли связаться с бэкендом. true = каталог не загрузился
-// (сайт открыт как файл file:// или сервер не запущен).
-window.MENU_LOAD_FAILED = false;
-
+// Функция возвращает статическое меню
 async function fetchMenuData() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/products`);
-    if (!response.ok) {
-      console.warn('Бэкенд недоступен, использую STATIC_MENU. Статус:', response.status);
-      return STATIC_MENU;
-    }
-    window.MENU_LOAD_FAILED = false;
-    
-    const dishes = await response.json();
-    const grouped = { pizza: [], rolls: [], burgers: [], snacks: [] };
-    
-    dishes.forEach(d => {
-      if (!grouped[d.category]) return;
-      grouped[d.category].push({
-        id: d.id,
-        name: d.name,
-        desc: d.description,
-        price: d.price,
-        img: resolveImageUrl(d.image_url) || 'img/dishes/placeholder.jpg',
-        alt: d.name,
-        tag: '', // Бэкенд пока не поддерживает теги
-        tagClass: '',
-        soldout: !d.is_available
-      });
-    });
-    
-    return grouped;
-  } catch (e) {
-    console.warn('Бэкенд недоступен, использую STATIC_MENU:', e);
-    return STATIC_MENU;
-  }
-}
-
-const ORDERS_STORAGE_KEY = 'imperiya_orders';
-
-function loadOrders() {
-  try {
-    const raw = localStorage.getItem(ORDERS_STORAGE_KEY);
-    const parsed = raw ? JSON.parse(raw) : [];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (e) { return []; }
-}
-
-function saveOrders(list) {
-  try { localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(list)); } catch (e) { /* ignore */ }
-}
-
-async function apiCreateOrder(orderData) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        customer_name: orderData.user_name,
-        phone: orderData.user_telephone,
-        address: orderData.address || 'Кизляр, ул. Победы 91/1',
-        items: (orderData.items || []).map(i => ({
-          product_id: i.id || 0,
-          product_name: i.dish_title,
-          quantity: i.quantity,
-          price: i.price
-        }))
-      })
-    });
-    
-    if (!response.ok) {
-      console.error('Ошибка создания заказа:', response.status);
-      // Fallback to localStorage if backend fails
-      return await apiCreateOrderFallback(orderData);
-    }
-    
-    return await response.json();
-  } catch (e) {
-    console.error('Ошибка создания заказа:', e);
-    // Fallback to localStorage if backend fails
-    return await apiCreateOrderFallback(orderData);
-  }
-}
-
-// Fallback function for localStorage if backend is unavailable
-async function apiCreateOrderFallback(orderData) {
-  const orders = loadOrders();
-  const now = new Date();
-  const newOrder = {
-    id: orders.reduce((m, o) => Math.max(m, o.id || 0), 0) + 1,
-    user_name: orderData.user_name,
-    user_telephone: orderData.user_telephone,
-    delivery_type: orderData.delivery_type || 'delivery',
-    total_price: (orderData.items || []).reduce((s, i) => s + (parseFloat(i.price) || 0) * (i.quantity || 1), 0),
-    done: false,
-    created_at: now.toISOString(),
-    items: (orderData.items || []).map(i => ({
-      dish_title: i.dish_title,
-      price: i.price,
-      quantity: i.quantity
-    }))
-  };
-  orders.unshift(newOrder);
-  saveOrders(orders);
-  return newOrder;
+  return STATIC_MENU;
 }
